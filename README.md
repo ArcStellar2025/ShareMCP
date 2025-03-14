@@ -36,8 +36,8 @@ Share MCP 是一个专注于 Model Context Protocol (MCP) 的导航站点。它�
 
 1. 克隆仓库
 ```bash
-git clone https://github.com/Ameprism/ShareMcp.git
-cd ShareMcp
+git clone https://github.com/Ameprism/ShareMCP.git
+cd ShareMCP
 ```
 
 2. 安装依赖
