@@ -54,7 +54,7 @@ const mcpMatrixRef = ref<InstanceType<typeof McpMatrix> | null>(null);
           <McpMatrix ref="mcpMatrixRef" />
           
           <div class="github-link-container">
-            <a href="https://github.com/shareAI-lab" target="_blank" class="github-link">在 GitHub 上查看项目</a>
+            <a href="https://github.com/Ameprism/ShareMCP" target="_blank" class="github-link">在 GitHub 上查看项目</a>
           </div>
         </div>
       </div>
@@ -242,7 +242,7 @@ h5 {
 }
 
 /* 响应式布局 */
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
   .header-section {
     flex-direction: column;
     align-items: flex-start;
