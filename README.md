@@ -1,7 +1,7 @@
-# Share MCP - Model Context Protocol 导航站
-## 网站链接：[sharemcp.com](sharemcp.com)
+# Share MCP - Model Context Protocol MCP Server导航站
+## 网站链接：[sharemcp.com](https://sharemcp.com)
 <p align="center">
-  <img src="ShareMCP-Logo.png" alt="Share MCP Logo" width="900"/>
+  <img src="ShareMCP-Logo.png" alt="Share MCP Logo" width="1000"/>
 </p>
 
 <div align="center">
@@ -36,7 +36,7 @@ Share MCP 是一个专注于 Model Context Protocol (MCP) 的导航站点。它�
 
 1. 克隆仓库
 ```bash
-git clone https://github.com/Ameprism/ShareMCP.git
+git clone https://github.com/AmeSora2022/ShareMCP.git
 cd ShareMCP
 ```
 
@@ -91,7 +91,7 @@ npm run build
 
 ## 👨‍💻 作者
 
-Made with ❤️ by [BiliBili@春雨AME](https://space.bilibili.com/666714573)
+Made with ❤️ by [BiliBili@春雨空](https://space.bilibili.com/666714573)
 
 ## 🙏 鸣谢
 
