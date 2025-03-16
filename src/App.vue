@@ -167,6 +167,7 @@ const getItemEmoji = (item: any): string => {
   background-size: cover;
   margin: 0;
   padding: 0;
+  background-color: #121212; /* 添加深色底色 */
 }
 
 /* 亚克力效果遮罩层 */
@@ -176,7 +177,7 @@ const getItemEmoji = (item: any): string => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0);
+  background: rgba(0, 0, 0, 0.3); /* 增加半透明黑色背景 */
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(10px);
   z-index: 1;
