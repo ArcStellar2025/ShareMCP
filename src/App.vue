@@ -29,6 +29,9 @@ const isSearching = ref(false);
 const githubUrl = ref('https://github.com/AmeSora2022/ShareMCP');
 const bilibiliUrl = ref('https://space.bilibili.com/666714573');
 
+// 添加 MCP 数据统计
+const mcpTotalCount = ref(0);
+
 // 监听搜索输入
 watch(searchQuery, async (newQuery) => {
   if (newQuery.trim() === '') {
@@ -67,6 +70,17 @@ const getItemEmoji = (item: any): string => {
   // 默认 emoji
   return '📄';
 };
+
+// 在 onMounted 钩子中获取数据总数
+onMounted(async () => {
+  try {
+    // 获取 MCP 数据总数
+    const totalCount = await MCPDataService.getTotalItemsCount();
+    mcpTotalCount.value = totalCount;
+  } catch (error) {
+    console.error('获取 MCP 数据总数失败:', error);
+  }
+});
 </script>
 
 <template>
@@ -86,7 +100,12 @@ const getItemEmoji = (item: any): string => {
           </div>
         </div>
         
-        <!-- 右侧社交媒体图标 -->
+        <!-- 右侧 MCP 总数显示 -->
+        <div class="mcp-count">
+          收录 MCP Server <span class="count-number">{{ mcpTotalCount }}</span> 个
+        </div>
+        
+        <!-- 社交媒体图标 -->
         <div class="social-icons">
           <div class="social-icon github" @click="openLink(githubUrl)">
             <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
@@ -103,12 +122,6 @@ const getItemEmoji = (item: any): string => {
       
       <div class="search-container">
         <div class="search-box">
-          <i class="search-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-          </i>
           <input 
             v-model="searchQuery"
             type="text" 
@@ -206,18 +219,24 @@ const getItemEmoji = (item: any): string => {
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
+  position: relative; /* 添加相对定位 */
 }
 
 /* Logo 区域 */
 .logo-area {
-  flex: 1;
+  position: absolute; /* 绝对定位 */
+  left: 0;
+  right: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: relative;
+  pointer-events: none; /* 防止阻挡其他元素的点击事件 */
 }
 
+/* 确保 logo 内部元素可点击 */
 .logo {
+  pointer-events: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -245,11 +264,13 @@ const getItemEmoji = (item: any): string => {
   display: none;
 }
 
-/* 添加 ShareAI-Lab 渐变文本样式 */
+/* 修改 ShareAI-Lab 样式 */
 .ai-lab-logo {
   position: absolute;
-  left: 0;
-  cursor: pointer;
+  left: 20px; /* 距离左侧的距离 */
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: auto; /* 确保可点击 */
 }
 
 .ai-lab-text {
@@ -273,10 +294,11 @@ const getItemEmoji = (item: any): string => {
 
 /* 社交媒体图标 */
 .social-icons {
-  display: flex;
+  display: none; /* 隐藏整个社交图标容器 */
   gap: 10px;
 }
 
+/* 保留原有的社交图标样式，以便将来可以恢复 */
 .social-icon {
   width: 40px;
   height: 40px;
@@ -291,6 +313,8 @@ const getItemEmoji = (item: any): string => {
   transition: all 0.2s ease;
   color: white;
 }
+
+/* 如果将来需要恢复图标，只需将 .social-icons 的 display 改回 flex */
 
 .social-icon:hover {
   background: rgba(255, 255, 255, 0.2);
@@ -331,21 +355,13 @@ const getItemEmoji = (item: any): string => {
   background: rgba(255, 255, 255, 0.15);
 }
 
-.search-icon {
-  position: absolute;
-  left: 12px;
-  color: rgba(255, 255, 255, 0.8);
-  display: flex;
-  align-items: center;
-}
-
 .search-input {
   width: 100%;
   height: 100%;
   background: transparent;
   border: none;
   outline: none;
-  padding: 0 16px 0 40px;
+  padding: 0 16px;
   color: white;
   font-size: 17px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -561,17 +577,27 @@ const getItemEmoji = (item: any): string => {
   .header-top {
     flex-direction: column;
     gap: 15px;
+    position: relative; /* 保持相对定位 */
   }
   
   .logo-area {
+    position: static; /* 在移动端取消绝对定位 */
     width: 100%;
     flex-direction: column;
     gap: 10px;
+    pointer-events: auto; /* 恢复点击事件 */
+    margin-bottom: 10px; /* 添加底部间距 */
   }
   
   .ai-lab-logo {
-    position: static;
+    position: static; /* 在移动端取消绝对定位 */
     margin-bottom: 5px;
+    transform: none; /* 移除变换 */
+  }
+  
+  .mcp-count {
+    margin: 5px auto; /* 上下间距5px，左右自动居中 */
+    width: fit-content; /* 宽度适应内容 */
   }
   
   .social-icons {
@@ -677,11 +703,36 @@ const getItemEmoji = (item: any): string => {
     margin-top: 250px; /* 进一步增加顶部边距 */
     height: calc(100vh - 250px);
   }
+  
+  .mcp-count {
+    font-size: 14px; /* 稍微减小字体大小 */
+    padding: 6px 10px; /* 减小内边距 */
+  }
 }
 
 /* 添加这个样式来确保 launchpad 组件有足够的顶部间距 */
 mcp-launchpad {
   margin-top: 30px;
   display: block;
+}
+
+/* 修改 MCP 总数显示样式 */
+.mcp-count {
+  margin-left: auto; /* 推到右侧 */
+  color: white;
+  font-size: 16px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 12px;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 1; /* 确保在 logo 上方 */
+}
+
+.count-number {
+  font-weight: bold;
+  color: #3494E6;
+  margin: 0 2px;
 }
 </style>
